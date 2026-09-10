@@ -1,0 +1,1248 @@
+{% extends "base.html" %}
+
+{% block title %}Project Intelligence | MPLAD AI{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+    <div>
+        <div class="eyebrow">AI PROJECT INTELLIGENCE</div>
+        <h1 id="projectTitle">Project Details</h1>
+        <p id="projectSubtitle">Loading project intelligence...</p>
+    </div>
+
+    <a href="/projects" class="btn btn-secondary">← Back to Projects</a>
+</div>
+
+<div id="loading" class="loading-card">
+    <div class="spinner"></div>
+    <p>Loading project intelligence...</p>
+</div>
+
+<div id="errorBox" class="alert alert-danger" style="display:none;"></div>
+
+<div id="projectContent" style="display:none;">
+
+    <!-- TOP RISK SUMMARY -->
+    <section class="risk-hero">
+        <div>
+            <div class="section-label">OVERALL RISK ASSESSMENT</div>
+            <div class="risk-score" id="riskScore">0</div>
+            <div class="risk-caption">Risk Score / 100</div>
+        </div>
+
+        <div class="risk-middle">
+            <span id="riskBadge" class="risk-badge">LOW</span>
+            <h2 id="riskHeadline">No significant risk indicators detected</h2>
+            <p>
+                This assessment combines AI anomaly detection with financial,
+                delay, duplicate, contractor, geographic and data-quality indicators.
+            </p>
+        </div>
+
+        <div class="review-box">
+            <div class="review-title">Human Review</div>
+            <div id="reviewStatus">Routine monitoring</div>
+            <small>AI output is decision-support, not a fraud determination.</small>
+        </div>
+    </section>
+
+    <!-- AI EXPLANATION -->
+    <section class="card">
+        <div class="card-header">
+            <div>
+                <div class="section-label">EXPLAINABLE AI</div>
+                <h2>Why was this project flagged?</h2>
+            </div>
+            <span id="aiScoreBadge" class="mini-score">AI: 0</span>
+        </div>
+
+        <div id="reasonsContainer" class="reasons-grid">
+        </div>
+
+        <div id="noReasons" class="empty-state" style="display:none;">
+            <div class="empty-icon">✓</div>
+            <h3>No major anomaly reasons detected</h3>
+            <p>The project currently shows no significant rule-based risk indicators.</p>
+        </div>
+    </section>
+
+    <!-- INDICATOR BREAKDOWN -->
+    <section class="card">
+        <div class="card-header">
+            <div>
+                <div class="section-label">RISK BREAKDOWN</div>
+                <h2>Detection Indicators</h2>
+            </div>
+        </div>
+
+        <div class="indicator-grid">
+
+            <div class="indicator-card">
+                <div class="indicator-icon">🤖</div>
+                <div class="indicator-info">
+                    <span>AI Anomaly</span>
+                    <strong id="aiIndicator">0</strong>
+                </div>
+                <div class="progress">
+                    <div id="aiBar" class="progress-fill"></div>
+                </div>
+            </div>
+
+            <div class="indicator-card">
+                <div class="indicator-icon">₹</div>
+                <div class="indicator-info">
+                    <span>Financial</span>
+                    <strong id="financialIndicator">0</strong>
+                </div>
+                <div class="progress">
+                    <div id="financialBar" class="progress-fill"></div>
+                </div>
+            </div>
+
+            <div class="indicator-card">
+                <div class="indicator-icon">⏱</div>
+                <div class="indicator-info">
+                    <span>Delay</span>
+                    <strong id="delayIndicator">0</strong>
+                </div>
+                <div class="progress">
+                    <div id="delayBar" class="progress-fill"></div>
+                </div>
+            </div>
+
+            <div class="indicator-card">
+                <div class="indicator-icon">↔</div>
+                <div class="indicator-info">
+                    <span>Duplicate / Similar</span>
+                    <strong id="duplicateIndicator">0</strong>
+                </div>
+                <div class="progress">
+                    <div id="duplicateBar" class="progress-fill"></div>
+                </div>
+            </div>
+
+            <div class="indicator-card">
+                <div class="indicator-icon">👥</div>
+                <div class="indicator-info">
+                    <span>Contractor</span>
+                    <strong id="contractorIndicator">0</strong>
+                </div>
+                <div class="progress">
+                    <div id="contractorBar" class="progress-fill"></div>
+                </div>
+            </div>
+
+            <div class="indicator-card">
+                <div class="indicator-icon">📍</div>
+                <div class="indicator-info">
+                    <span>Geographic</span>
+                    <strong id="geographicIndicator">0</strong>
+                </div>
+                <div class="progress">
+                    <div id="geographicBar" class="progress-fill"></div>
+                </div>
+            </div>
+
+            <div class="indicator-card">
+                <div class="indicator-icon">⚠</div>
+                <div class="indicator-info">
+                    <span>Data Quality</span>
+                    <strong id="dataQualityIndicator">0</strong>
+                </div>
+                <div class="progress">
+                    <div id="dataQualityBar" class="progress-fill"></div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- FINANCIAL + TIMELINE -->
+    <div class="two-column">
+
+        <section class="card">
+            <div class="section-label">FINANCIAL ANALYSIS</div>
+            <h2>Fund Utilization</h2>
+
+            <div class="financial-main">
+                <div>
+                    <span>Sanctioned</span>
+                    <strong id="sanctioned">₹0</strong>
+                </div>
+
+                <div>
+                    <span>Released</span>
+                    <strong id="released">₹0</strong>
+                </div>
+
+                <div>
+                    <span>Expenditure</span>
+                    <strong id="expenditure">₹0</strong>
+                </div>
+            </div>
+
+            <div class="utilization">
+                <div class="utilization-header">
+                    <span>Utilization</span>
+                    <strong id="utilization">0%</strong>
+                </div>
+
+                <div class="large-progress">
+                    <div id="utilizationBar"></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="card">
+            <div class="section-label">PROJECT TIMELINE</div>
+            <h2>Implementation Status</h2>
+
+            <div class="timeline">
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div>
+                        <span>Sanction Date</span>
+                        <strong id="sanctionDate">—</strong>
+                    </div>
+                </div>
+
+                <div class="timeline-line"></div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div>
+                        <span>Start Date</span>
+                        <strong id="startDate">—</strong>
+                    </div>
+                </div>
+
+                <div class="timeline-line"></div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div>
+                        <span>Completion Date</span>
+                        <strong id="completionDate">—</strong>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </div>
+
+    <!-- PROJECT INFORMATION -->
+    <section class="card">
+        <div class="card-header">
+            <div>
+                <div class="section-label">PROJECT INFORMATION</div>
+                <h2>Administrative Details</h2>
+            </div>
+            <span id="statusBadge" class="status-badge">—</span>
+        </div>
+
+        <div class="details-grid">
+
+            <div>
+                <label>Project ID</label>
+                <strong id="projectId">—</strong>
+            </div>
+
+            <div>
+                <label>State</label>
+                <strong id="state">—</strong>
+            </div>
+
+            <div>
+                <label>District</label>
+                <strong id="district">—</strong>
+            </div>
+
+            <div>
+                <label>Constituency</label>
+                <strong id="constituency">—</strong>
+            </div>
+
+            <div>
+                <label>MP Name</label>
+                <strong id="mpName">—</strong>
+            </div>
+
+            <div>
+                <label>Category</label>
+                <strong id="category">—</strong>
+            </div>
+
+            <div>
+                <label>Implementing Agency</label>
+                <strong id="agency">—</strong>
+            </div>
+
+            <div>
+                <label>Contractor</label>
+                <strong id="contractor">—</strong>
+            </div>
+
+            <div>
+                <label>Beneficiaries</label>
+                <strong id="beneficiaries">—</strong>
+            </div>
+
+            <div>
+                <label>Location</label>
+                <strong id="location">—</strong>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- DATA QUALITY -->
+    <section id="qualitySection" class="card warning-card" style="display:none;">
+        <div class="section-label">DATA QUALITY</div>
+        <h2>Data Quality Warnings</h2>
+        <div id="qualityWarnings"></div>
+    </section>
+
+    <!-- REVIEW RECOMMENDATION -->
+    <section class="review-panel">
+        <div class="review-panel-icon">🔎</div>
+
+        <div>
+            <div class="section-label">REVIEW RECOMMENDATION</div>
+            <h2 id="recommendationTitle">Routine monitoring</h2>
+            <p id="recommendationText">
+                No immediate escalation is indicated based on the available data.
+            </p>
+        </div>
+    </section>
+
+</div>
+
+<style>
+
+.page-header {
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    margin-bottom:24px;
+    gap:20px;
+}
+
+.page-header h1 {
+    margin:4px 0 6px;
+    font-size:30px;
+}
+
+.page-header p {
+    margin:0;
+    color:#64748b;
+}
+
+.eyebrow,
+.section-label {
+    font-size:11px;
+    font-weight:800;
+    letter-spacing:1.2px;
+    color:#64748b;
+}
+
+.btn {
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:10px 16px;
+    border-radius:9px;
+    text-decoration:none;
+    font-weight:700;
+    border:1px solid #dbe3ec;
+}
+
+.btn-secondary {
+    background:#fff;
+    color:#334155;
+}
+
+.loading-card,
+.card {
+    background:#fff;
+    border:1px solid #e2e8f0;
+    border-radius:14px;
+    box-shadow:0 4px 18px rgba(15,23,42,.04);
+}
+
+.loading-card {
+    padding:60px;
+    text-align:center;
+}
+
+.spinner {
+    width:34px;
+    height:34px;
+    border:4px solid #e2e8f0;
+    border-top-color:#2563eb;
+    border-radius:50%;
+    animation:spin .8s linear infinite;
+    margin:0 auto 14px;
+}
+
+@keyframes spin {
+    to { transform:rotate(360deg); }
+}
+
+.risk-hero {
+    display:grid;
+    grid-template-columns:160px 1fr 250px;
+    gap:28px;
+    align-items:center;
+    padding:28px;
+    margin-bottom:20px;
+    border-radius:16px;
+    color:white;
+    background:linear-gradient(135deg,#0f172a,#1e3a5f);
+}
+
+.risk-score {
+    font-size:58px;
+    line-height:1;
+    font-weight:900;
+}
+
+.risk-caption {
+    opacity:.7;
+    margin-top:7px;
+}
+
+.risk-middle h2 {
+    margin:8px 0;
+    font-size:22px;
+}
+
+.risk-middle p {
+    margin:0;
+    color:#cbd5e1;
+    line-height:1.6;
+}
+
+.risk-badge {
+    display:inline-block;
+    padding:6px 12px;
+    border-radius:999px;
+    font-size:12px;
+    font-weight:900;
+    background:#334155;
+}
+
+.review-box {
+    border-left:1px solid rgba(255,255,255,.2);
+    padding-left:25px;
+}
+
+.review-title {
+    font-size:11px;
+    letter-spacing:1px;
+    opacity:.65;
+    font-weight:800;
+    text-transform:uppercase;
+}
+
+#reviewStatus {
+    font-size:19px;
+    font-weight:800;
+    margin:7px 0;
+}
+
+.review-box small {
+    color:#cbd5e1;
+    line-height:1.5;
+}
+
+.card {
+    padding:24px;
+    margin-bottom:20px;
+}
+
+.card-header {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.card h2 {
+    margin:5px 0 0;
+    font-size:20px;
+}
+
+.mini-score {
+    padding:7px 11px;
+    border-radius:8px;
+    background:#eff6ff;
+    color:#1d4ed8;
+    font-size:12px;
+    font-weight:800;
+}
+
+.reasons-grid {
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:12px;
+}
+
+.reason {
+    display:flex;
+    gap:12px;
+    padding:15px;
+    border:1px solid #fee2e2;
+    background:#fff7f7;
+    border-radius:10px;
+}
+
+.reason-icon {
+    width:30px;
+    height:30px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:8px;
+    background:#fee2e2;
+    color:#b91c1c;
+    font-weight:900;
+}
+
+.reason-title {
+    font-weight:800;
+    color:#334155;
+}
+
+.reason-text {
+    color:#64748b;
+    font-size:13px;
+    margin-top:3px;
+    line-height:1.45;
+}
+
+.empty-state {
+    text-align:center;
+    padding:30px;
+    color:#64748b;
+}
+
+.empty-icon {
+    margin:auto;
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#dcfce7;
+    color:#15803d;
+    font-size:22px;
+}
+
+.indicator-grid {
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:14px;
+}
+
+.indicator-card {
+    padding:16px;
+    border:1px solid #e2e8f0;
+    border-radius:11px;
+}
+
+.indicator-icon {
+    font-size:19px;
+    margin-bottom:10px;
+}
+
+.indicator-info {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.indicator-info span {
+    font-size:13px;
+    color:#64748b;
+}
+
+.indicator-info strong {
+    font-size:17px;
+}
+
+.progress {
+    height:6px;
+    background:#e2e8f0;
+    border-radius:99px;
+    overflow:hidden;
+    margin-top:12px;
+}
+
+.progress-fill {
+    height:100%;
+    width:0%;
+    background:#2563eb;
+    border-radius:99px;
+    transition:width .5s ease;
+}
+
+.two-column {
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+}
+
+.financial-main {
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:15px;
+    margin-top:20px;
+}
+
+.financial-main span,
+.timeline-item span {
+    display:block;
+    color:#64748b;
+    font-size:12px;
+    margin-bottom:5px;
+}
+
+.financial-main strong {
+    font-size:17px;
+}
+
+.utilization {
+    margin-top:28px;
+}
+
+.utilization-header {
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:8px;
+    font-size:14px;
+}
+
+.large-progress {
+    height:12px;
+    background:#e2e8f0;
+    border-radius:99px;
+    overflow:hidden;
+}
+
+#utilizationBar {
+    height:100%;
+    width:0;
+    background:#2563eb;
+    border-radius:99px;
+}
+
+.timeline {
+    margin-top:22px;
+}
+
+.timeline-item {
+    display:flex;
+    gap:13px;
+    align-items:center;
+}
+
+.timeline-dot {
+    width:12px;
+    height:12px;
+    background:#2563eb;
+    border-radius:50%;
+}
+
+.timeline-line {
+    height:25px;
+    width:2px;
+    background:#dbeafe;
+    margin-left:5px;
+}
+
+.timeline-item strong {
+    font-size:14px;
+}
+
+.details-grid {
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:22px 18px;
+}
+
+.details-grid label {
+    display:block;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:.5px;
+    color:#94a3b8;
+    margin-bottom:5px;
+}
+
+.details-grid strong {
+    font-size:14px;
+    color:#334155;
+    word-break:break-word;
+}
+
+.status-badge {
+    padding:6px 11px;
+    background:#eff6ff;
+    color:#1d4ed8;
+    border-radius:999px;
+    font-size:12px;
+    font-weight:800;
+}
+
+.warning-card {
+    border-color:#fde68a;
+    background:#fffbeb;
+}
+
+.warning-item {
+    padding:10px 12px;
+    margin-top:8px;
+    border-radius:8px;
+    background:#fef3c7;
+    color:#92400e;
+    font-size:13px;
+}
+
+.review-panel {
+    display:flex;
+    gap:18px;
+    align-items:center;
+    padding:24px;
+    margin-bottom:30px;
+    border-radius:14px;
+    background:#eff6ff;
+    border:1px solid #bfdbfe;
+}
+
+.review-panel-icon {
+    width:48px;
+    height:48px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:12px;
+    background:#dbeafe;
+    font-size:22px;
+}
+
+.review-panel h2 {
+    margin:5px 0;
+    color:#1e3a8a;
+}
+
+.review-panel p {
+    margin:0;
+    color:#475569;
+}
+
+.alert-danger {
+    padding:15px;
+    border-radius:10px;
+    background:#fef2f2;
+    border:1px solid #fecaca;
+    color:#991b1b;
+    margin-bottom:20px;
+}
+
+@media(max-width:1000px) {
+    .risk-hero {
+        grid-template-columns:1fr;
+    }
+
+    .review-box {
+        border-left:0;
+        border-top:1px solid rgba(255,255,255,.2);
+        padding-left:0;
+        padding-top:18px;
+    }
+
+    .indicator-grid {
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .details-grid {
+        grid-template-columns:repeat(2,1fr);
+    }
+}
+
+@media(max-width:700px) {
+    .page-header {
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .reasons-grid,
+    .two-column,
+    .indicator-grid {
+        grid-template-columns:1fr;
+    }
+
+    .details-grid {
+        grid-template-columns:1fr;
+    }
+
+    .financial-main {
+        grid-template-columns:1fr;
+    }
+}
+
+</style>
+
+<script>
+
+const projectId = "{{ project_id }}";
+
+function formatCurrency(value) {
+    const number = Number(value || 0);
+
+    if (number >= 10000000) {
+        return "₹" + (number / 10000000).toFixed(2) + " Cr";
+    }
+
+    if (number >= 100000) {
+        return "₹" + (number / 100000).toFixed(2) + " L";
+    }
+
+    return "₹" + number.toLocaleString("en-IN");
+}
+
+function formatNumber(value) {
+    return Number(value || 0).toLocaleString("en-IN");
+}
+
+function cleanDate(value) {
+    if (!value || value === "NaT" || value === "None") {
+        return "—";
+    }
+
+    try {
+        return new Date(value).toLocaleDateString("en-IN", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric"
+        });
+    } catch {
+        return value;
+    }
+}
+
+function riskClass(level) {
+    return String(level || "LOW").toUpperCase();
+}
+
+function setIndicator(name, value) {
+    const score = Math.round(Number(value || 0));
+
+    const valueElement = document.getElementById(name + "Indicator");
+    const barElement = document.getElementById(name + "Bar");
+
+    if (valueElement) {
+        valueElement.textContent = score;
+    }
+
+    if (barElement) {
+        barElement.style.width = Math.min(score, 100) + "%";
+
+        if (score >= 75) {
+            barElement.style.background = "#dc2626";
+        } else if (score >= 50) {
+            barElement.style.background = "#ea580c";
+        } else if (score >= 25) {
+            barElement.style.background = "#d97706";
+        } else {
+            barElement.style.background = "#2563eb";
+        }
+    }
+}
+
+function buildReasons(project) {
+
+    const reasons = [];
+
+    const ai = Number(project.anomaly_score || 0);
+    const financial = Number(project.financial_indicator || 0);
+    const delay = Number(project.delay_indicator || 0);
+    const duplicate = Number(project.duplicate_indicator || 0);
+    const contractor = Number(project.contractor_indicator || 0);
+    const geographic = Number(project.geographic_indicator || 0);
+    const quality = Number(project.data_quality_indicator || 0);
+
+    if (project.anomaly_reasons) {
+
+        let raw = project.anomaly_reasons;
+
+        if (Array.isArray(raw)) {
+            raw.forEach(x => reasons.push(String(x)));
+        } else {
+            String(raw)
+                .split("||")
+                .map(x => x.trim())
+                .filter(Boolean)
+                .forEach(x => reasons.push(x));
+        }
+    }
+
+    if (ai >= 50) {
+        reasons.push(
+            "AI anomaly detection identified this project as statistically unusual compared with the project dataset."
+        );
+    }
+
+    if (financial >= 50) {
+        reasons.push(
+            "Financial indicators show a significant deviation involving expenditure, fund utilization or sanctioned amounts."
+        );
+    } else if (financial >= 25) {
+        reasons.push(
+            "Financial monitoring detected a moderate deviation in project fund utilization."
+        );
+    }
+
+    if (delay >= 50) {
+        reasons.push(
+            "The project has a significant implementation-delay indicator based on expected and recorded timelines."
+        );
+    } else if (delay >= 25) {
+        reasons.push(
+            "The project shows signs of schedule slippage requiring monitoring."
+        );
+    }
+
+    if (duplicate >= 50) {
+        reasons.push(
+            "The system detected a strong similarity with another project record in the available dataset."
+        );
+    } else if (duplicate >= 25) {
+        reasons.push(
+            "The project has similarities with other records that may warrant verification."
+        );
+    }
+
+    if (contractor >= 50) {
+        reasons.push(
+            "The contractor indicator suggests unusually high concentration of projects with the same contractor."
+        );
+    } else if (contractor >= 25) {
+        reasons.push(
+            "Contractor allocation patterns show a concentration that should be reviewed."
+        );
+    }
+
+    if (geographic >= 50) {
+        reasons.push(
+            "Geographic analysis identified an unusual spatial concentration or clustering pattern."
+        );
+    } else if (geographic >= 25) {
+        reasons.push(
+            "The project is part of a geographic cluster requiring additional contextual review."
+        );
+    }
+
+    if (quality >= 25) {
+        reasons.push(
+            "Data-quality checks identified incomplete, invalid or inconsistent project information."
+        );
+    }
+
+    // Remove duplicates
+    return [...new Set(reasons)];
+}
+
+function renderReasons(project) {
+
+    const container = document.getElementById("reasonsContainer");
+    const empty = document.getElementById("noReasons");
+
+    const reasons = buildReasons(project);
+
+    container.innerHTML = "";
+
+    if (!reasons.length) {
+        empty.style.display = "block";
+        return;
+    }
+
+    empty.style.display = "none";
+
+    reasons.forEach((reason, index) => {
+
+        const item = document.createElement("div");
+        item.className = "reason";
+
+        item.innerHTML = `
+            <div class="reason-icon">!</div>
+            <div>
+                <div class="reason-title">Risk Indicator ${index + 1}</div>
+                <div class="reason-text">${escapeHtml(reason)}</div>
+            </div>
+        `;
+
+        container.appendChild(item);
+    });
+}
+
+function escapeHtml(value) {
+
+    return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
+function updateRecommendation(project) {
+
+    const score = Number(project.risk_score || 0);
+    const level = riskClass(project.risk_level);
+
+    const title = document.getElementById("recommendationTitle");
+    const text = document.getElementById("recommendationText");
+    const status = document.getElementById("reviewStatus");
+
+    if (level === "CRITICAL" || score >= 75) {
+
+        title.textContent = "Priority human review recommended";
+        text.textContent =
+            "Multiple high-severity indicators are present. The project should receive priority verification by the appropriate authority before any adverse conclusion is reached.";
+        status.textContent = "Priority Review";
+
+    } else if (level === "HIGH" || score >= 50) {
+
+        title.textContent = "Detailed human review recommended";
+        text.textContent =
+            "The project contains meaningful risk indicators. Supporting documents, expenditure records and implementation progress should be reviewed.";
+        status.textContent = "Detailed Review";
+
+    } else if (level === "MEDIUM" || score >= 25) {
+
+        title.textContent = "Enhanced monitoring recommended";
+        text.textContent =
+            "Some indicators require attention. The project can remain under enhanced monitoring while the underlying information is verified.";
+        status.textContent = "Enhanced Monitoring";
+
+    } else {
+
+        title.textContent = "Routine monitoring";
+        text.textContent =
+            "No significant risk pattern was identified. Continue normal monitoring and update the assessment as new project information becomes available.";
+        status.textContent = "Routine Monitoring";
+    }
+}
+
+function applyRiskStyle(level) {
+
+    const badge = document.getElementById("riskBadge");
+
+    const styles = {
+        LOW: ["#166534", "#dcfce7"],
+        MEDIUM: ["#92400e", "#fef3c7"],
+        HIGH: ["#9a3412", "#ffedd5"],
+        CRITICAL: ["#991b1b", "#fee2e2"]
+    };
+
+    const [text, background] = styles[level] || styles.LOW;
+
+    badge.style.color = text;
+    badge.style.background = background;
+}
+
+async function loadProject() {
+
+    try {
+
+        const response = await fetch(
+            `/api/projects/${encodeURIComponent(projectId)}`
+        );
+
+        if (!response.ok) {
+            throw new Error("Project could not be loaded.");
+        }
+
+        const result = await response.json();
+
+        const project =
+            result.data ||
+            result.project ||
+            result;
+
+        populateProject(project);
+
+        document.getElementById("loading").style.display = "none";
+        document.getElementById("projectContent").style.display = "block";
+
+    } catch (error) {
+
+        document.getElementById("loading").style.display = "none";
+
+        const box = document.getElementById("errorBox");
+        box.textContent = error.message || "Unable to load project.";
+        box.style.display = "block";
+    }
+}
+
+function populateProject(project) {
+
+    const score = Number(project.risk_score || 0);
+    const level = riskClass(project.risk_level);
+
+    document.getElementById("projectTitle").textContent =
+        project.project_name || "Project Details";
+
+    document.getElementById("projectSubtitle").textContent =
+        `${project.project_id || projectId} • ${project.district || "District"}, ${project.state || "State"}`;
+
+    document.getElementById("riskScore").textContent =
+        Math.round(score);
+
+    document.getElementById("riskBadge").textContent =
+        level;
+
+    document.getElementById("riskHeadline").textContent =
+        level === "CRITICAL"
+            ? "Critical risk indicators require priority review"
+            : level === "HIGH"
+                ? "Multiple high-risk indicators detected"
+                : level === "MEDIUM"
+                    ? "Moderate risk indicators detected"
+                    : "No significant risk pattern detected";
+
+    document.getElementById("aiScoreBadge").textContent =
+        "AI: " + Math.round(Number(project.anomaly_score || 0));
+
+    applyRiskStyle(level);
+
+    setIndicator("ai", project.anomaly_score);
+    setIndicator("financial", project.financial_indicator);
+    setIndicator("delay", project.delay_indicator);
+    setIndicator("duplicate", project.duplicate_indicator);
+    setIndicator("contractor", project.contractor_indicator);
+    setIndicator("geographic", project.geographic_indicator);
+    setIndicator("dataQuality", project.data_quality_indicator);
+
+    document.getElementById("sanctioned").textContent =
+        formatCurrency(project.sanctioned_amount);
+
+    document.getElementById("released").textContent =
+        formatCurrency(project.released_amount);
+
+    document.getElementById("expenditure").textContent =
+        formatCurrency(project.expenditure);
+
+    const sanctioned = Number(project.sanctioned_amount || 0);
+    const expenditure = Number(project.expenditure || 0);
+
+    const utilization =
+        sanctioned > 0
+            ? Math.min((expenditure / sanctioned) * 100, 100)
+            : 0;
+
+    document.getElementById("utilization").textContent =
+        utilization.toFixed(1) + "%";
+
+    document.getElementById("utilizationBar").style.width =
+        utilization + "%";
+
+    document.getElementById("sanctionDate").textContent =
+        cleanDate(project.sanction_date);
+
+    document.getElementById("startDate").textContent =
+        cleanDate(project.start_date);
+
+    document.getElementById("completionDate").textContent =
+        cleanDate(project.completion_date);
+
+    document.getElementById("projectId").textContent =
+        project.project_id || "—";
+
+    document.getElementById("state").textContent =
+        project.state || "—";
+
+    document.getElementById("district").textContent =
+        project.district || "—";
+
+    document.getElementById("constituency").textContent =
+        project.constituency || "—";
+
+    document.getElementById("mpName").textContent =
+        project.mp_name || project.MP_name || "—";
+
+    document.getElementById("category").textContent =
+        project.project_category || project.category || "—";
+
+    document.getElementById("agency").textContent =
+        project.implementing_agency || "—";
+
+    document.getElementById("contractor").textContent =
+        project.contractor || "—";
+
+    document.getElementById("beneficiaries").textContent =
+        formatNumber(project.beneficiary_count);
+
+    if (project.latitude && project.longitude) {
+        document.getElementById("location").textContent =
+            `${Number(project.latitude).toFixed(4)}, ${Number(project.longitude).toFixed(4)}`;
+    } else {
+        document.getElementById("location").textContent =
+            "Location unavailable";
+    }
+
+    const status =
+        project.project_status || project.status || "Unknown";
+
+    document.getElementById("statusBadge").textContent =
+        status;
+
+    renderReasons(project);
+    renderQuality(project);
+    updateRecommendation(project);
+}
+
+function renderQuality(project) {
+
+    const raw = project.data_quality_warnings;
+
+    if (!raw) {
+        return;
+    }
+
+    let warnings = [];
+
+    if (Array.isArray(raw)) {
+        warnings = raw;
+    } else {
+        warnings = String(raw)
+            .split("||")
+            .map(x => x.trim())
+            .filter(Boolean);
+    }
+
+    if (!warnings.length) {
+        return;
+    }
+
+    const section = document.getElementById("qualitySection");
+    const container = document.getElementById("qualityWarnings");
+
+    section.style.display = "block";
+
+    container.innerHTML = warnings.map(
+        warning =>
+            `<div class="warning-item">⚠ ${escapeHtml(warning)}</div>`
+    ).join("");
+}
+
+loadProject();
+
+</script>
+
+{% endblock %}

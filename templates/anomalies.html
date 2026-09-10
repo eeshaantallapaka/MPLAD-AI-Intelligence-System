@@ -1,0 +1,780 @@
+{% extends "base.html" %}
+
+{% block title %}Anomaly Intelligence | MPLAD AI{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+    <div>
+        <h1>🔎 Anomaly Intelligence</h1>
+        <p>
+            AI-assisted detection of unusual financial, implementation,
+            contractor and project patterns.
+        </p>
+    </div>
+
+    <button class="btn-primary" onclick="runAnalysis()">
+        🧠 Run AI Analysis
+    </button>
+</div>
+
+
+<!-- STATUS -->
+
+<div id="analysisStatus" class="alert hidden"></div>
+
+
+<!-- SUMMARY -->
+
+<div class="stats-grid">
+
+    <div class="stat-card">
+        <div class="stat-label">AI Anomalies</div>
+        <div class="stat-value" id="aiAnomalies">—</div>
+        <div class="stat-sub">Machine-learning indicators</div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-label">Financial Anomalies</div>
+        <div class="stat-value" id="financialAnomalies">—</div>
+        <div class="stat-sub">Financial risk indicators</div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-label">Delayed Projects</div>
+        <div class="stat-value" id="delayedProjects">—</div>
+        <div class="stat-sub">Implementation delays</div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-label">Critical Risk</div>
+        <div class="stat-value danger" id="criticalProjects">—</div>
+        <div class="stat-sub">Requires priority review</div>
+    </div>
+
+</div>
+
+
+<!-- EXPLANATION -->
+
+<div class="content-card">
+
+    <div class="section-title">
+        <div>
+            <h2>🧠 How AI Detection Works</h2>
+            <p>
+                The system combines machine-learning anomaly detection
+                with transparent rule-based indicators.
+            </p>
+        </div>
+    </div>
+
+    <div class="method-grid">
+
+        <div class="method-card">
+            <div class="method-icon">🤖</div>
+            <h3>Machine Learning</h3>
+            <p>
+                Isolation Forest identifies projects whose financial
+                and implementation patterns differ significantly from
+                the broader project population.
+            </p>
+        </div>
+
+        <div class="method-card">
+            <div class="method-icon">💰</div>
+            <h3>Financial Analysis</h3>
+            <p>
+                Detects cost overruns, unusual utilization,
+                expenditure beyond sanctioned amounts and release
+                inconsistencies.
+            </p>
+        </div>
+
+        <div class="method-card">
+            <div class="method-icon">⏱️</div>
+            <h3>Delay Detection</h3>
+            <p>
+                Compares project timelines and expected completion
+                periods to identify potentially delayed projects.
+            </p>
+        </div>
+
+        <div class="method-card">
+            <div class="method-icon">📊</div>
+            <h3>Risk Scoring</h3>
+            <p>
+                Multiple indicators are combined into a transparent
+                risk score to support human investigation.
+            </p>
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- RISK DISTRIBUTION -->
+
+<div class="content-card">
+
+    <div class="section-title">
+        <div>
+            <h2>Risk Distribution</h2>
+            <p>Current project risk classification.</p>
+        </div>
+    </div>
+
+    <div class="risk-grid">
+
+        <div class="risk-box low">
+            <span>LOW</span>
+            <strong id="lowRisk">—</strong>
+        </div>
+
+        <div class="risk-box medium">
+            <span>MEDIUM</span>
+            <strong id="mediumRisk">—</strong>
+        </div>
+
+        <div class="risk-box high">
+            <span>HIGH</span>
+            <strong id="highRisk">—</strong>
+        </div>
+
+        <div class="risk-box critical">
+            <span>CRITICAL</span>
+            <strong id="criticalRisk">—</strong>
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ANOMALY TABLE -->
+
+<div class="content-card">
+
+    <div class="section-title">
+
+        <div>
+            <h2>🚨 Projects Requiring Investigation</h2>
+            <p>
+                Highest-risk projects identified by the monitoring system.
+            </p>
+        </div>
+
+        <a href="/projects" class="btn-secondary">
+            View All Projects
+        </a>
+
+    </div>
+
+    <div class="table-container">
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>Project ID</th>
+                    <th>Project</th>
+                    <th>State</th>
+                    <th>District</th>
+                    <th>Risk Score</th>
+                    <th>Risk Level</th>
+                    <th>Indicators</th>
+                    <th>Action</th>
+                </tr>
+
+            </thead>
+
+            <tbody id="anomalyTable">
+
+                <tr>
+                    <td colspan="8" class="loading">
+                        Loading anomaly intelligence...
+                    </td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+
+<!-- DISCLAIMER -->
+
+<div class="notice-box">
+
+    <strong>⚠️ Important:</strong>
+
+    AI-generated anomaly and risk indicators are
+    <strong>decision-support signals</strong>. They do not independently
+    establish fraud, corruption, wrongdoing or criminal activity.
+    All flagged projects require appropriate human verification.
+
+</div>
+
+
+<style>
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 28px;
+}
+
+.page-header h1 {
+    margin: 0 0 8px;
+    font-size: 32px;
+}
+
+.page-header p {
+    margin: 0;
+    color: #64748b;
+    font-size: 15px;
+}
+
+.btn-primary,
+.btn-secondary {
+    border: none;
+    border-radius: 9px;
+    padding: 12px 18px;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-primary {
+    background: #2563eb;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #1d4ed8;
+}
+
+.btn-secondary {
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-bottom: 24px;
+}
+
+.stat-card {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 22px;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+}
+
+.stat-label {
+    color: #64748b;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.stat-value {
+    font-size: 30px;
+    font-weight: 800;
+    color: #0f172a;
+}
+
+.stat-value.danger {
+    color: #dc2626;
+}
+
+.stat-sub {
+    margin-top: 6px;
+    font-size: 12px;
+    color: #94a3b8;
+}
+
+.content-card {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+}
+
+.section-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.section-title h2 {
+    margin: 0 0 5px;
+}
+
+.section-title p {
+    margin: 0;
+    color: #64748b;
+    font-size: 14px;
+}
+
+.method-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+}
+
+.method-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.method-icon {
+    font-size: 28px;
+    margin-bottom: 10px;
+}
+
+.method-card h3 {
+    margin: 0 0 8px;
+}
+
+.method-card p {
+    color: #64748b;
+    font-size: 13px;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.risk-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+}
+
+.risk-box {
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.risk-box span {
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.risk-box strong {
+    font-size: 24px;
+}
+
+.risk-box.low {
+    background: #ecfdf5;
+    color: #047857;
+}
+
+.risk-box.medium {
+    background: #fffbeb;
+    color: #b45309;
+}
+
+.risk-box.high {
+    background: #fff7ed;
+    color: #c2410c;
+}
+
+.risk-box.critical {
+    background: #fef2f2;
+    color: #b91c1c;
+}
+
+.table-container {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    text-align: left;
+    background: #f8fafc;
+    padding: 14px;
+    font-size: 12px;
+    color: #475569;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+td {
+    padding: 14px;
+    border-bottom: 1px solid #e2e8f0;
+    font-size: 13px;
+}
+
+.loading {
+    text-align: center;
+    padding: 35px;
+    color: #64748b;
+}
+
+.risk-badge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.risk-badge.LOW {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.risk-badge.MEDIUM {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.risk-badge.HIGH {
+    background: #fed7aa;
+    color: #9a3412;
+}
+
+.risk-badge.CRITICAL {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.alert {
+    padding: 14px 18px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    color: #1d4ed8;
+}
+
+.hidden {
+    display: none;
+}
+
+.notice-box {
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    color: #92400e;
+    padding: 18px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+    line-height: 1.6;
+}
+
+@media (max-width: 1000px) {
+
+    .stats-grid,
+    .method-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .risk-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 650px) {
+
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .stats-grid,
+    .method-grid,
+    .risk-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+</style>
+
+
+<script>
+
+async function loadAnomalyData() {
+
+    try {
+
+        const response = await fetch("/api/dashboard");
+
+        const result = await response.json();
+
+        if (!result.success) {
+            throw new Error(result.error || "Unable to load dashboard");
+        }
+
+        const data = result.data || result;
+
+        document.getElementById("aiAnomalies").textContent =
+            data.detected_anomalies ??
+            data.anomalies ??
+            0;
+
+        document.getElementById("financialAnomalies").textContent =
+            data.financial_anomalies ?? 0;
+
+        document.getElementById("delayedProjects").textContent =
+            data.delayed_projects ??
+            data.delayed ??
+            0;
+
+        document.getElementById("criticalProjects").textContent =
+            data.critical_projects ??
+            data.critical_risk ??
+            data.critical ??
+            0;
+
+        document.getElementById("lowRisk").textContent =
+            data.low_risk ?? 0;
+
+        document.getElementById("mediumRisk").textContent =
+            data.medium_risk ?? 0;
+
+        document.getElementById("highRisk").textContent =
+            data.high_risk_projects ??
+            data.high_risk ??
+            0;
+
+        document.getElementById("criticalRisk").textContent =
+            data.critical_projects ??
+            data.critical_risk ??
+            data.critical ??
+            0;
+
+    } catch (error) {
+
+        console.error(error);
+
+    }
+
+    loadProjects();
+
+}
+
+
+async function loadProjects() {
+
+    const table = document.getElementById("anomalyTable");
+
+    try {
+
+        const response = await fetch(
+            "/api/projects?risk_level=CRITICAL"
+        );
+
+        const result = await response.json();
+
+        let projects = [];
+
+        if (Array.isArray(result)) {
+            projects = result;
+        } else if (result.data && Array.isArray(result.data)) {
+            projects = result.data;
+        } else if (result.projects && Array.isArray(result.projects)) {
+            projects = result.projects;
+        }
+
+        if (projects.length === 0) {
+
+            const fallback = await fetch("/api/projects");
+
+            const fallbackResult = await fallback.json();
+
+            if (Array.isArray(fallbackResult)) {
+                projects = fallbackResult;
+            } else if (fallbackResult.data) {
+                projects = fallbackResult.data;
+            } else if (fallbackResult.projects) {
+                projects = fallbackResult.projects;
+            }
+
+        }
+
+        projects.sort(
+            (a, b) =>
+                Number(b.risk_score || 0) -
+                Number(a.risk_score || 0)
+        );
+
+        projects = projects.slice(0, 15);
+
+        if (projects.length === 0) {
+
+            table.innerHTML = `
+                <tr>
+                    <td colspan="8" class="loading">
+                        No projects available for investigation.
+                    </td>
+                </tr>
+            `;
+
+            return;
+        }
+
+        table.innerHTML = projects.map(project => {
+
+            const indicators = [];
+
+            if (Number(project.anomaly_score || 0) > 0)
+                indicators.push("AI");
+
+            if (Number(project.financial_indicator || 0) > 0)
+                indicators.push("Financial");
+
+            if (Number(project.delay_indicator || 0) > 0)
+                indicators.push("Delay");
+
+            if (Number(project.duplicate_indicator || 0) > 0)
+                indicators.push("Duplicate");
+
+            if (Number(project.contractor_indicator || 0) > 0)
+                indicators.push("Contractor");
+
+            if (Number(project.geographic_indicator || 0) > 0)
+                indicators.push("Geographic");
+
+            return `
+                <tr>
+
+                    <td>
+                        <strong>
+                            ${project.project_id || "—"}
+                        </strong>
+                    </td>
+
+                    <td>
+                        ${project.project_name || "—"}
+                    </td>
+
+                    <td>
+                        ${project.state || "—"}
+                    </td>
+
+                    <td>
+                        ${project.district || "—"}
+                    </td>
+
+                    <td>
+                        <strong>
+                            ${Number(project.risk_score || 0).toFixed(1)}
+                        </strong>
+                    </td>
+
+                    <td>
+                        <span class="risk-badge ${project.risk_level || "LOW"}">
+                            ${project.risk_level || "LOW"}
+                        </span>
+                    </td>
+
+                    <td>
+                        ${indicators.length
+                            ? indicators.join(" · ")
+                            : "None"}
+                    </td>
+
+                    <td>
+                        <a
+                            href="/projects/${project.project_id}"
+                            style="color:#2563eb;font-weight:700;text-decoration:none;"
+                        >
+                            View
+                        </a>
+                    </td>
+
+                </tr>
+            `;
+
+        }).join("");
+
+    } catch (error) {
+
+        console.error(error);
+
+        table.innerHTML = `
+            <tr>
+                <td colspan="8" class="loading">
+                    Unable to load anomaly data.
+                </td>
+            </tr>
+        `;
+
+    }
+
+}
+
+
+async function runAnalysis() {
+
+    const status = document.getElementById("analysisStatus");
+
+    status.classList.remove("hidden");
+
+    status.textContent =
+        "🧠 Running AI anomaly analysis... Please wait.";
+
+    try {
+
+        const response = await fetch(
+            "/api/anomalies/run",
+            {
+                method: "POST"
+            }
+        );
+
+        const result = await response.json();
+
+        if (!response.ok || result.success === false) {
+            throw new Error(
+                result.error ||
+                "AI analysis failed"
+            );
+        }
+
+        status.textContent =
+            "✅ AI analysis completed successfully. Risk indicators updated.";
+
+        await loadAnomalyData();
+
+    } catch (error) {
+
+        console.error(error);
+
+        status.textContent =
+            "❌ " + error.message;
+
+    }
+
+}
+
+
+document.addEventListener(
+    "DOMContentLoaded",
+    loadAnomalyData
+);
+
+</script>
+
+{% endblock %}

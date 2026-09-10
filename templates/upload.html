@@ -1,0 +1,857 @@
+{% extends "base.html" %}
+
+{% block title %}Upload Data | MPLAD AI{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+    <div>
+        <h1>📤 Upload MPLAD Data</h1>
+        <p>
+            Upload project datasets for AI-powered anomaly detection,
+            financial analysis and implementation monitoring.
+        </p>
+    </div>
+</div>
+
+
+<div class="upload-grid">
+
+    <!-- MAIN UPLOAD CARD -->
+
+    <div class="card">
+
+        <div class="card-header">
+            <div>
+                <h2>Upload Project Dataset</h2>
+                <p>
+                    Import project records from CSV or Excel files.
+                </p>
+            </div>
+        </div>
+
+        <form
+            id="uploadForm"
+            enctype="multipart/form-data"
+        >
+
+            <label
+                class="drop-zone"
+                for="fileInput"
+                id="dropZone"
+            >
+
+                <div class="upload-cloud">
+                    ☁️
+                </div>
+
+                <h3>Choose your dataset</h3>
+
+                <p>
+                    Click to browse or drag and drop a file here
+                </p>
+
+                <span>
+                    CSV, XLSX or XLS • Maximum 16 MB
+                </span>
+
+                <input
+                    type="file"
+                    id="fileInput"
+                    name="file"
+                    accept=".csv,.xlsx,.xls"
+                    hidden
+                >
+
+            </label>
+
+
+            <div
+                id="selectedFile"
+                class="selected-file hidden"
+            ></div>
+
+
+            <button
+                type="submit"
+                id="uploadButton"
+                class="primary-button"
+            >
+                📤 Upload & Process Dataset
+            </button>
+
+        </form>
+
+
+        <div
+            id="uploadResult"
+            class="result hidden"
+        ></div>
+
+    </div>
+
+
+    <!-- DATA REQUIREMENTS -->
+
+    <div class="card">
+
+        <div class="card-header">
+            <div>
+                <h2>📋 Supported Fields</h2>
+                <p>
+                    Common MPLAD field names are automatically recognized.
+                </p>
+            </div>
+        </div>
+
+
+        <div class="field-list">
+
+            <div class="field">
+                <strong>Project ID</strong>
+                <span>Unique project identifier</span>
+            </div>
+
+            <div class="field">
+                <strong>Project Name</strong>
+                <span>Name of the project</span>
+            </div>
+
+            <div class="field">
+                <strong>State</strong>
+                <span>State / UT</span>
+            </div>
+
+            <div class="field">
+                <strong>District</strong>
+                <span>District name</span>
+            </div>
+
+            <div class="field">
+                <strong>Constituency</strong>
+                <span>Parliamentary constituency</span>
+            </div>
+
+            <div class="field">
+                <strong>Category</strong>
+                <span>Project category</span>
+            </div>
+
+            <div class="field">
+                <strong>Sanctioned Amount</strong>
+                <span>Approved project amount</span>
+            </div>
+
+            <div class="field">
+                <strong>Released Amount</strong>
+                <span>Funds released</span>
+            </div>
+
+            <div class="field">
+                <strong>Expenditure</strong>
+                <span>Actual expenditure</span>
+            </div>
+
+            <div class="field">
+                <strong>Status</strong>
+                <span>Project implementation status</span>
+            </div>
+
+            <div class="field">
+                <strong>Start Date</strong>
+                <span>Implementation start date</span>
+            </div>
+
+            <div class="field">
+                <strong>Completion Date</strong>
+                <span>Actual completion date</span>
+            </div>
+
+            <div class="field">
+                <strong>Vendor / Contractor</strong>
+                <span>Implementing contractor</span>
+            </div>
+
+            <div class="field">
+                <strong>Latitude / Longitude</strong>
+                <span>Project geographic coordinates</span>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- PROCESSING PIPELINE -->
+
+<div class="card">
+
+    <div class="card-header">
+        <div>
+            <h2>🔄 Data Processing Pipeline</h2>
+            <p>
+                Uploaded records pass through validation before analysis.
+            </p>
+        </div>
+    </div>
+
+
+    <div class="pipeline">
+
+        <div class="pipeline-step">
+            <div class="pipeline-number">1</div>
+            <strong>Upload</strong>
+            <span>CSV / Excel</span>
+        </div>
+
+        <div class="pipeline-connector"></div>
+
+        <div class="pipeline-step">
+            <div class="pipeline-number">2</div>
+            <strong>Validate</strong>
+            <span>Data quality</span>
+        </div>
+
+        <div class="pipeline-connector"></div>
+
+        <div class="pipeline-step">
+            <div class="pipeline-number">3</div>
+            <strong>Normalize</strong>
+            <span>Standardize fields</span>
+        </div>
+
+        <div class="pipeline-connector"></div>
+
+        <div class="pipeline-step">
+            <div class="pipeline-number">4</div>
+            <strong>Analyze</strong>
+            <span>AI + rules</span>
+        </div>
+
+        <div class="pipeline-connector"></div>
+
+        <div class="pipeline-step">
+            <div class="pipeline-number">5</div>
+            <strong>Risk Score</strong>
+            <span>Prioritized review</span>
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- INFORMATION -->
+
+<div class="information-box">
+
+    <div class="information-icon">
+        ℹ️
+    </div>
+
+    <div>
+        <strong>What happens after upload?</strong>
+
+        <p>
+            The system validates the dataset, normalizes supported fields,
+            stores project records and makes them available to the
+            monitoring and AI analysis modules.
+        </p>
+
+        <p>
+            After uploading new data, use
+            <strong>Run AI Analysis</strong> from the Dashboard or
+            Anomalies page to calculate updated risk indicators.
+        </p>
+    </div>
+
+</div>
+
+
+<style>
+
+.page-header {
+    margin-bottom: 28px;
+}
+
+.page-header h1 {
+    margin: 0 0 8px;
+    font-size: 32px;
+    color: #0f172a;
+}
+
+.page-header p {
+    margin: 0;
+    color: #64748b;
+    font-size: 15px;
+}
+
+
+.upload-grid {
+    display: grid;
+    grid-template-columns: 1.25fr 1fr;
+    gap: 24px;
+}
+
+
+.card {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 26px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+}
+
+
+.card-header {
+    margin-bottom: 22px;
+}
+
+.card-header h2 {
+    margin: 0 0 6px;
+    color: #0f172a;
+}
+
+.card-header p {
+    margin: 0;
+    color: #64748b;
+    font-size: 14px;
+}
+
+
+/* DROP ZONE */
+
+.drop-zone {
+    display: block;
+    text-align: center;
+    padding: 48px 25px;
+    border: 2px dashed #bfdbfe;
+    border-radius: 14px;
+    background: #f8fbff;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.drop-zone:hover {
+    border-color: #2563eb;
+    background: #eff6ff;
+}
+
+.drop-zone.dragging {
+    border-color: #2563eb;
+    background: #dbeafe;
+}
+
+
+.upload-cloud {
+    font-size: 48px;
+    margin-bottom: 12px;
+}
+
+.drop-zone h3 {
+    margin: 0 0 8px;
+    font-size: 18px;
+    color: #0f172a;
+}
+
+.drop-zone p {
+    margin: 0 0 10px;
+    color: #475569;
+}
+
+.drop-zone span {
+    color: #94a3b8;
+    font-size: 12px;
+}
+
+
+/* FILE */
+
+.selected-file {
+    margin-top: 15px;
+    padding: 14px 16px;
+    border-radius: 9px;
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    color: #334155;
+}
+
+.hidden {
+    display: none;
+}
+
+
+/* BUTTON */
+
+.primary-button {
+    width: 100%;
+    margin-top: 18px;
+    border: none;
+    border-radius: 9px;
+    padding: 14px 20px;
+    background: #2563eb;
+    color: white;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.primary-button:hover {
+    background: #1d4ed8;
+}
+
+.primary-button:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+
+/* RESULT */
+
+.result {
+    margin-top: 18px;
+    padding: 16px;
+    border-radius: 9px;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.result.success {
+    background: #ecfdf5;
+    border: 1px solid #a7f3d0;
+    color: #047857;
+}
+
+.result.error {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #b91c1c;
+}
+
+
+/* FIELDS */
+
+.field-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.field {
+    padding: 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 9px;
+    background: #f8fafc;
+}
+
+.field strong {
+    display: block;
+    font-size: 13px;
+    color: #334155;
+}
+
+.field span {
+    display: block;
+    margin-top: 4px;
+    font-size: 11px;
+    color: #94a3b8;
+}
+
+
+/* PIPELINE */
+
+.pipeline {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.pipeline-step {
+    text-align: center;
+    min-width: 100px;
+}
+
+.pipeline-number {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin: 0 auto 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #2563eb;
+    color: white;
+    font-weight: 800;
+}
+
+.pipeline-step strong {
+    display: block;
+    font-size: 13px;
+    color: #334155;
+}
+
+.pipeline-step span {
+    display: block;
+    margin-top: 4px;
+    font-size: 11px;
+    color: #94a3b8;
+}
+
+.pipeline-connector {
+    flex: 1;
+    height: 2px;
+    background: #dbeafe;
+}
+
+
+/* INFORMATION */
+
+.information-box {
+    display: flex;
+    gap: 15px;
+    padding: 20px;
+    margin-bottom: 30px;
+    border: 1px solid #bfdbfe;
+    border-radius: 12px;
+    background: #eff6ff;
+    color: #1e40af;
+}
+
+.information-icon {
+    font-size: 25px;
+}
+
+.information-box strong {
+    color: #1e3a8a;
+}
+
+.information-box p {
+    margin: 7px 0 0;
+    color: #475569;
+    line-height: 1.6;
+    font-size: 13px;
+}
+
+
+/* RESPONSIVE */
+
+@media (max-width: 900px) {
+
+    .upload-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .pipeline {
+        flex-wrap: wrap;
+    }
+
+    .pipeline-connector {
+        min-width: 30px;
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .field-list {
+        grid-template-columns: 1fr;
+    }
+
+    .pipeline {
+        flex-direction: column;
+    }
+
+    .pipeline-connector {
+        width: 2px;
+        height: 25px;
+        flex: none;
+    }
+
+}
+
+</style>
+
+
+<script>
+
+const fileInput =
+    document.getElementById("fileInput");
+
+const selectedFile =
+    document.getElementById("selectedFile");
+
+const uploadForm =
+    document.getElementById("uploadForm");
+
+const uploadButton =
+    document.getElementById("uploadButton");
+
+const uploadResult =
+    document.getElementById("uploadResult");
+
+const dropZone =
+    document.getElementById("dropZone");
+
+
+/* FILE SELECT */
+
+fileInput.addEventListener(
+    "change",
+    function () {
+
+        if (!this.files.length) {
+            selectedFile.classList.add("hidden");
+            return;
+        }
+
+        showSelectedFile(
+            this.files[0]
+        );
+    }
+);
+
+
+/* DRAG & DROP */
+
+dropZone.addEventListener(
+    "dragover",
+    function (event) {
+
+        event.preventDefault();
+
+        dropZone.classList.add(
+            "dragging"
+        );
+    }
+);
+
+
+dropZone.addEventListener(
+    "dragleave",
+    function () {
+
+        dropZone.classList.remove(
+            "dragging"
+        );
+    }
+);
+
+
+dropZone.addEventListener(
+    "drop",
+    function (event) {
+
+        event.preventDefault();
+
+        dropZone.classList.remove(
+            "dragging"
+        );
+
+        if (!event.dataTransfer.files.length) {
+            return;
+        }
+
+        fileInput.files =
+            event.dataTransfer.files;
+
+        showSelectedFile(
+            event.dataTransfer.files[0]
+        );
+    }
+);
+
+
+/* FILE DISPLAY */
+
+function showSelectedFile(file) {
+
+    selectedFile.classList.remove(
+        "hidden"
+    );
+
+    selectedFile.innerHTML = `
+        <strong>📄 ${escapeHtml(file.name)}</strong>
+        <br>
+        <span style="color:#64748b;font-size:12px;">
+            ${(file.size / 1024 / 1024).toFixed(2)} MB
+        </span>
+    `;
+}
+
+
+/* UPLOAD */
+
+uploadForm.addEventListener(
+    "submit",
+    async function (event) {
+
+        event.preventDefault();
+
+        if (!fileInput.files.length) {
+
+            showResult(
+                "Please select a CSV or Excel file first.",
+                false
+            );
+
+            return;
+        }
+
+
+        const formData =
+            new FormData();
+
+        formData.append(
+            "file",
+            fileInput.files[0]
+        );
+
+
+        uploadButton.disabled = true;
+
+        uploadButton.textContent =
+            "⏳ Uploading & Processing...";
+
+        uploadResult.classList.add(
+            "hidden"
+        );
+
+
+        try {
+
+            const response =
+                await fetch(
+                    "/api/upload",
+                    {
+                        method: "POST",
+                        body: formData
+                    }
+                );
+
+
+            const result =
+                await response.json();
+
+
+            if (
+                !response.ok ||
+                result.success === false
+            ) {
+
+                throw new Error(
+                    result.error ||
+                    result.message ||
+                    "Upload failed"
+                );
+            }
+
+
+            let message =
+                "Dataset uploaded successfully.";
+
+            if (
+                result.records_inserted !== undefined
+            ) {
+
+                message += `
+                    <br>
+                    <strong>Inserted:</strong>
+                    ${result.records_inserted || 0}
+
+                    &nbsp;&nbsp;
+
+                    <strong>Updated:</strong>
+                    ${result.records_updated || 0}
+
+                    &nbsp;&nbsp;
+
+                    <strong>Skipped:</strong>
+                    ${result.records_skipped || 0}
+                `;
+            }
+
+
+            if (result.warning) {
+
+                message += `
+                    <br>
+                    <span>
+                        ⚠️ ${escapeHtml(result.warning)}
+                    </span>
+                `;
+            }
+
+
+            showResult(
+                "✅ " + message,
+                true
+            );
+
+
+        } catch (error) {
+
+            console.error(error);
+
+            showResult(
+                "❌ " + error.message,
+                false
+            );
+
+
+        } finally {
+
+            uploadButton.disabled = false;
+
+            uploadButton.textContent =
+                "📤 Upload & Process Dataset";
+
+        }
+
+    }
+);
+
+
+/* RESULT */
+
+function showResult(
+    message,
+    success
+) {
+
+    uploadResult.classList.remove(
+        "hidden",
+        "success",
+        "error"
+    );
+
+    uploadResult.classList.add(
+        success
+            ? "success"
+            : "error"
+    );
+
+    uploadResult.innerHTML =
+        message;
+}
+
+
+/* SECURITY */
+
+function escapeHtml(value) {
+
+    return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
+</script>
+
+{% endblock %}

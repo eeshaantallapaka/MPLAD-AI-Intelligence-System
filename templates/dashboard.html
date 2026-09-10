@@ -1,0 +1,1813 @@
+{% extends "base.html" %}
+
+{% block title %}AI Dashboard | MPLAD Intelligence System{% endblock %}
+
+{% block content %}
+
+<style>
+    .dashboard-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+    }
+
+    .dashboard-title h1 {
+        margin: 0;
+        font-size: 30px;
+        font-weight: 800;
+        color: #172033;
+    }
+
+    .dashboard-title p {
+        margin: 6px 0 0;
+        color: #687386;
+        font-size: 14px;
+    }
+
+    .ai-run-btn {
+        border: none;
+        background: linear-gradient(135deg, #173b72, #2563a6);
+        color: white;
+        padding: 12px 20px;
+        border-radius: 9px;
+        font-weight: 700;
+        cursor: pointer;
+        box-shadow: 0 5px 15px rgba(23, 59, 114, 0.18);
+        transition: 0.2s;
+    }
+
+    .ai-run-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 8px 20px rgba(23, 59, 114, 0.25);
+    }
+
+    .ai-run-btn:disabled {
+        opacity: 0.6;
+        cursor: wait;
+        transform: none;
+    }
+
+    .kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+        margin-bottom: 20px;
+    }
+
+    .kpi-card {
+        background: white;
+        border: 1px solid #e4e8ef;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 3px 12px rgba(20, 35, 60, 0.05);
+    }
+
+    .kpi-label {
+        color: #6b7280;
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 8px;
+    }
+
+    .kpi-value {
+        font-size: 28px;
+        font-weight: 800;
+        color: #172033;
+    }
+
+    .kpi-sub {
+        font-size: 12px;
+        color: #8992a3;
+        margin-top: 5px;
+    }
+
+    .ai-summary {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+        margin-bottom: 20px;
+    }
+
+    .ai-card {
+        background: linear-gradient(135deg, #ffffff, #f7faff);
+        border: 1px solid #dce5f2;
+        border-radius: 12px;
+        padding: 18px;
+    }
+
+    .ai-card-title {
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #65748b;
+        font-weight: 700;
+    }
+
+    .ai-card-value {
+        font-size: 25px;
+        font-weight: 800;
+        margin-top: 7px;
+        color: #173b72;
+    }
+
+    .section {
+        background: white;
+        border: 1px solid #e4e8ef;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 3px 12px rgba(20, 35, 60, 0.04);
+    }
+
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 18px;
+        gap: 10px;
+    }
+
+    .section-title {
+        margin: 0;
+        font-size: 18px;
+        color: #172033;
+        font-weight: 800;
+    }
+
+    .section-description {
+        margin: 4px 0 0;
+        color: #7b8494;
+        font-size: 12px;
+    }
+
+    .chart-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+
+    .chart-card {
+        background: white;
+        border: 1px solid #e4e8ef;
+        border-radius: 12px;
+        padding: 18px;
+        min-height: 350px;
+        box-shadow: 0 3px 12px rgba(20, 35, 60, 0.04);
+    }
+
+    .chart-card h3 {
+        margin: 0 0 15px;
+        font-size: 15px;
+        color: #273449;
+    }
+
+    .chart-container {
+        position: relative;
+        height: 285px;
+    }
+
+    .map-wrapper {
+        position: relative;
+    }
+
+    #indiaMap {
+        width: 100%;
+        height: 540px;
+        border-radius: 10px;
+        overflow: hidden;
+        border: 1px solid #dce2ea;
+    }
+
+    .map-controls {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 15px;
+    }
+
+    .map-controls select {
+        padding: 9px 12px;
+        border: 1px solid #d5dbe5;
+        border-radius: 7px;
+        background: white;
+        color: #273449;
+        font-size: 13px;
+        min-width: 160px;
+    }
+
+    .map-legend {
+        position: absolute;
+        z-index: 999;
+        right: 15px;
+        bottom: 20px;
+        background: rgba(255, 255, 255, 0.96);
+        padding: 12px 14px;
+        border-radius: 8px;
+        box-shadow: 0 3px 12px rgba(0,0,0,0.18);
+        font-size: 12px;
+    }
+
+    .legend-row {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        margin: 5px 0;
+    }
+
+    .legend-dot {
+        width: 11px;
+        height: 11px;
+        border-radius: 50%;
+        display: inline-block;
+    }
+
+    .risk-low {
+        background: #22c55e;
+    }
+
+    .risk-medium {
+        background: #eab308;
+    }
+
+    .risk-high {
+        background: #f97316;
+    }
+
+    .risk-critical {
+        background: #dc2626;
+    }
+
+    .attention-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .attention-table th {
+        background: #f5f7fa;
+        color: #5d687a;
+        font-size: 12px;
+        text-align: left;
+        padding: 11px;
+        border-bottom: 1px solid #e3e7ed;
+    }
+
+    .attention-table td {
+        padding: 11px;
+        font-size: 13px;
+        border-bottom: 1px solid #edf0f4;
+        color: #344054;
+    }
+
+    .attention-table tr:hover {
+        background: #f8fafc;
+    }
+
+    .risk-badge {
+        display: inline-block;
+        padding: 4px 9px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 800;
+    }
+
+    .risk-badge.low {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .risk-badge.medium {
+        background: #fef9c3;
+        color: #854d0e;
+    }
+
+    .risk-badge.high {
+        background: #ffedd5;
+        color: #9a3412;
+    }
+
+    .risk-badge.critical {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .view-btn {
+        display: inline-block;
+        padding: 5px 9px;
+        border-radius: 6px;
+        background: #eef4fb;
+        color: #173b72;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 11px;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 35px;
+        color: #7b8494;
+    }
+
+    .loading {
+        text-align: center;
+        padding: 30px;
+        color: #65748b;
+    }
+
+    .status-message {
+        margin-top: 10px;
+        font-size: 13px;
+        color: #667085;
+    }
+
+    @media (max-width: 1100px) {
+        .kpi-grid,
+        .ai-summary {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 800px) {
+        .chart-grid {
+            grid-template-columns: 1fr;
+        }
+
+        #indiaMap {
+            height: 430px;
+        }
+    }
+
+    @media (max-width: 600px) {
+        .kpi-grid,
+        .ai-summary {
+            grid-template-columns: 1fr;
+        }
+
+        .dashboard-title h1 {
+            font-size: 24px;
+        }
+
+        #indiaMap {
+            height: 360px;
+        }
+    }
+</style>
+
+<div class="dashboard-header">
+    <div class="dashboard-title">
+        <h1>MPLAD AI Intelligence Dashboard</h1>
+        <p>AI-assisted monitoring of anomalies, financial risks, delays and implementation inefficiencies</p>
+    </div>
+
+    <div>
+        <button id="runAIButton" class="ai-run-btn" onclick="runAIAnalysis()">
+            ⚡ Run AI Analysis
+        </button>
+        <div id="aiStatus" class="status-message"></div>
+    </div>
+</div>
+
+
+<!-- KPI CARDS -->
+<div class="kpi-grid">
+
+    <div class="kpi-card">
+        <div class="kpi-label">TOTAL PROJECTS</div>
+        <div class="kpi-value" id="totalProjects">—</div>
+        <div class="kpi-sub">Projects under monitoring</div>
+    </div>
+
+    <div class="kpi-card">
+        <div class="kpi-label">SANCTIONED AMOUNT</div>
+        <div class="kpi-value" id="totalSanctioned">—</div>
+        <div class="kpi-sub">Total approved allocation</div>
+    </div>
+
+    <div class="kpi-card">
+        <div class="kpi-label">TOTAL EXPENDITURE</div>
+        <div class="kpi-value" id="totalExpenditure">—</div>
+        <div class="kpi-sub">Reported expenditure</div>
+    </div>
+
+    <div class="kpi-card">
+        <div class="kpi-label">UTILIZATION</div>
+        <div class="kpi-value" id="utilization">—</div>
+        <div class="kpi-sub">Expenditure / sanctioned amount</div>
+    </div>
+
+</div>
+
+
+<!-- STATUS KPI -->
+<div class="kpi-grid">
+
+    <div class="kpi-card">
+        <div class="kpi-label">COMPLETED</div>
+        <div class="kpi-value" id="completedProjects">—</div>
+        <div class="kpi-sub">Projects completed</div>
+    </div>
+
+    <div class="kpi-card">
+        <div class="kpi-label">ONGOING</div>
+        <div class="kpi-value" id="ongoingProjects">—</div>
+        <div class="kpi-sub">Projects currently active</div>
+    </div>
+
+    <div class="kpi-card">
+        <div class="kpi-label">DELAYED</div>
+        <div class="kpi-value" id="delayedProjects">—</div>
+        <div class="kpi-sub">Projects requiring monitoring</div>
+    </div>
+
+    <div class="kpi-card">
+        <div class="kpi-label">HIGH / CRITICAL RISK</div>
+        <div class="kpi-value" id="highRiskProjects">—</div>
+        <div class="kpi-sub">AI-assisted risk indicators</div>
+    </div>
+
+</div>
+
+
+<!-- AI SUMMARY -->
+<div class="ai-summary">
+
+    <div class="ai-card">
+        <div class="ai-card-title">AI Anomalies</div>
+        <div class="ai-card-value" id="anomalyProjects">—</div>
+    </div>
+
+    <div class="ai-card">
+        <div class="ai-card-title">Critical Risk</div>
+        <div class="ai-card-value" id="criticalProjects">—</div>
+    </div>
+
+    <div class="ai-card">
+        <div class="ai-card-title">Risk Coverage</div>
+        <div class="ai-card-value" id="riskCoverage">—</div>
+    </div>
+
+    <div class="ai-card">
+        <div class="ai-card-title">System Status</div>
+        <div class="ai-card-value" id="systemStatus">Ready</div>
+    </div>
+
+</div>
+
+
+<!-- INDIA MAP -->
+<div class="section">
+
+    <div class="section-header">
+        <div>
+            <h2 class="section-title">Interactive India Project Risk Map</h2>
+            <p class="section-description">
+                Geographic distribution of MPLAD projects and AI-generated risk indicators
+            </p>
+        </div>
+    </div>
+
+    <div class="map-controls">
+
+        <select id="mapRiskFilter" onchange="applyMapFilters()">
+            <option value="ALL">All Risk Levels</option>
+            <option value="LOW">Low</option>
+            <option value="MEDIUM">Medium</option>
+            <option value="HIGH">High</option>
+            <option value="CRITICAL">Critical</option>
+        </select>
+
+        <select id="mapStateFilter" onchange="applyMapFilters()">
+            <option value="ALL">All States</option>
+        </select>
+
+    </div>
+
+    <div class="map-wrapper">
+
+        <div id="indiaMap"></div>
+
+        <div class="map-legend">
+
+            <strong>Risk Level</strong>
+
+            <div class="legend-row">
+                <span class="legend-dot risk-low"></span>
+                Low
+            </div>
+
+            <div class="legend-row">
+                <span class="legend-dot risk-medium"></span>
+                Medium
+            </div>
+
+            <div class="legend-row">
+                <span class="legend-dot risk-high"></span>
+                High
+            </div>
+
+            <div class="legend-row">
+                <span class="legend-dot risk-critical"></span>
+                Critical
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- CHARTS -->
+<div class="section">
+
+    <div class="section-header">
+        <div>
+            <h2 class="section-title">Advanced Risk Analytics</h2>
+            <p class="section-description">
+                Comparative analysis of financial, operational and AI-generated indicators
+            </p>
+        </div>
+    </div>
+
+    <div class="chart-grid">
+
+        <div class="chart-card">
+            <h3>Risk Distribution</h3>
+            <div class="chart-container">
+                <canvas id="riskDistributionChart"></canvas>
+            </div>
+        </div>
+
+        <div class="chart-card">
+            <h3>State-wise Risk Exposure</h3>
+            <div class="chart-container">
+                <canvas id="stateRiskChart"></canvas>
+            </div>
+        </div>
+
+        <div class="chart-card">
+            <h3>Category-wise Projects</h3>
+            <div class="chart-container">
+                <canvas id="categoryChart"></canvas>
+            </div>
+        </div>
+
+        <div class="chart-card">
+            <h3>Financial Performance</h3>
+            <div class="chart-container">
+                <canvas id="financialChart"></canvas>
+            </div>
+        </div>
+
+        <div class="chart-card">
+            <h3>Implementation Status</h3>
+            <div class="chart-container">
+                <canvas id="statusChart"></canvas>
+            </div>
+        </div>
+
+        <div class="chart-card">
+            <h3>Anomaly Indicator Comparison</h3>
+            <div class="chart-container">
+                <canvas id="indicatorChart"></canvas>
+            </div>
+        </div>
+
+        <div class="chart-card">
+            <h3>State-wise Average Risk Score</h3>
+            <div class="chart-container">
+                <canvas id="stateAverageRiskChart"></canvas>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- PROJECTS REQUIRING ATTENTION -->
+<div class="section">
+
+    <div class="section-header">
+        <div>
+            <h2 class="section-title">Projects Requiring Attention</h2>
+            <p class="section-description">
+                Highest AI-assisted risk scores requiring human review
+            </p>
+        </div>
+    </div>
+
+    <div id="attentionTableContainer">
+        <div class="loading">Loading project intelligence...</div>
+    </div>
+
+</div>
+
+
+<!-- LEAFLET -->
+<link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+</script>
+
+
+<script>
+
+let allProjects = [];
+let indiaMap = null;
+let mapMarkers = [];
+let charts = {};
+
+
+/* =========================
+   HELPERS
+========================= */
+
+function getProjectsFromResponse(result) {
+
+    if (!result) return [];
+
+    if (Array.isArray(result)) {
+        return result;
+    }
+
+    if (Array.isArray(result.data)) {
+        return result.data;
+    }
+
+    if (result.data && Array.isArray(result.data.data)) {
+        return result.data.data;
+    }
+
+    if (Array.isArray(result.projects)) {
+        return result.projects;
+    }
+
+    return [];
+}
+
+
+function number(value) {
+
+    const n = Number(value);
+
+    if (!Number.isFinite(n)) {
+        return 0;
+    }
+
+    return n;
+}
+
+
+function money(value) {
+
+    const n = number(value);
+
+    if (n >= 10000000) {
+        return "₹" + (n / 10000000).toFixed(2) + " Cr";
+    }
+
+    if (n >= 100000) {
+        return "₹" + (n / 100000).toFixed(2) + " L";
+    }
+
+    return "₹" + n.toLocaleString("en-IN");
+}
+
+
+function riskLevel(project) {
+
+    let level = String(project.risk_level || "").toUpperCase();
+
+    if (level) {
+        return level;
+    }
+
+    const score = number(project.risk_score);
+
+    if (score >= 75) return "CRITICAL";
+    if (score >= 50) return "HIGH";
+    if (score >= 25) return "MEDIUM";
+
+    return "LOW";
+}
+
+
+function destroyChart(name) {
+
+    if (charts[name]) {
+        charts[name].destroy();
+    }
+
+}
+
+
+/* =========================
+   DASHBOARD
+========================= */
+
+async function loadDashboard() {
+
+    try {
+
+        const response = await fetch("/api/dashboard");
+
+        const result = await response.json();
+
+        const data = result.data || result;
+
+        document.getElementById("totalProjects").textContent =
+            number(data.total_projects).toLocaleString("en-IN");
+
+        document.getElementById("totalSanctioned").textContent =
+            money(data.total_sanctioned);
+
+        document.getElementById("totalExpenditure").textContent =
+            money(data.total_expenditure);
+
+        document.getElementById("utilization").textContent =
+            number(data.utilization_percentage).toFixed(2) + "%";
+
+        document.getElementById("completedProjects").textContent =
+            number(data.completed_projects).toLocaleString("en-IN");
+
+        document.getElementById("ongoingProjects").textContent =
+            number(data.ongoing_projects).toLocaleString("en-IN");
+
+        document.getElementById("delayedProjects").textContent =
+            number(data.delayed_projects).toLocaleString("en-IN");
+
+        const highRisk =
+            number(data.high_risk_projects) +
+            number(data.critical_projects);
+
+        document.getElementById("highRiskProjects").textContent =
+            highRisk.toLocaleString("en-IN");
+
+        document.getElementById("anomalyProjects").textContent =
+            number(data.anomalies).toLocaleString("en-IN");
+
+        document.getElementById("criticalProjects").textContent =
+            number(data.critical_projects).toLocaleString("en-IN");
+
+        document.getElementById("riskCoverage").textContent =
+            number(data.total_projects) > 0
+                ? Math.round((highRisk / number(data.total_projects)) * 100) + "%"
+                : "0%";
+
+        document.getElementById("systemStatus").textContent = "Active";
+
+    } catch (error) {
+
+        console.error("Dashboard error:", error);
+
+        document.getElementById("systemStatus").textContent = "Error";
+
+    }
+
+}
+
+
+/* =========================
+   LOAD PROJECTS
+========================= */
+
+async function loadProjects() {
+
+    try {
+
+        const response = await fetch("/api/projects");
+
+        const result = await response.json();
+
+        allProjects = getProjectsFromResponse(result);
+
+        renderCharts(allProjects);
+
+        setupMap(allProjects);
+
+        renderAttentionTable(allProjects);
+
+    } catch (error) {
+
+        console.error("Project loading error:", error);
+
+        document.getElementById("attentionTableContainer").innerHTML =
+            `<div class="empty-state">
+                Unable to load project intelligence.
+            </div>`;
+
+    }
+
+}
+
+
+/* =========================
+   CHARTS
+========================= */
+
+function renderCharts(projects) {
+
+    renderRiskDistribution(projects);
+
+    renderStateRisk(projects);
+
+    renderCategory(projects);
+
+    renderFinancial(projects);
+
+    renderStatus(projects);
+
+    renderIndicators(projects);
+
+    renderStateAverageRisk(projects);
+
+}
+
+
+/* Risk Distribution */
+
+function renderRiskDistribution(projects) {
+
+    const counts = {
+        LOW: 0,
+        MEDIUM: 0,
+        HIGH: 0,
+        CRITICAL: 0
+    };
+
+    projects.forEach(project => {
+
+        const level = riskLevel(project);
+
+        if (counts[level] !== undefined) {
+            counts[level]++;
+        }
+
+    });
+
+    destroyChart("riskDistribution");
+
+    charts.riskDistribution =
+        new Chart(
+            document.getElementById("riskDistributionChart"),
+            {
+                type: "doughnut",
+
+                data: {
+                    labels: ["Low", "Medium", "High", "Critical"],
+
+                    datasets: [{
+                        data: [
+                            counts.LOW,
+                            counts.MEDIUM,
+                            counts.HIGH,
+                            counts.CRITICAL
+                        ]
+                    }]
+                },
+
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+
+                    plugins: {
+                        legend: {
+                            position: "bottom"
+                        }
+                    }
+                }
+            }
+        );
+
+}
+
+
+/* State Risk */
+
+function renderStateRisk(projects) {
+
+    const stateMap = {};
+
+    projects.forEach(project => {
+
+        const state = project.state || "Unknown";
+
+        if (!stateMap[state]) {
+            stateMap[state] = 0;
+        }
+
+        if (
+            riskLevel(project) === "HIGH" ||
+            riskLevel(project) === "CRITICAL"
+        ) {
+            stateMap[state]++;
+        }
+
+    });
+
+    const sorted = Object.entries(stateMap)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 10);
+
+    destroyChart("stateRisk");
+
+    charts.stateRisk =
+        new Chart(
+            document.getElementById("stateRiskChart"),
+            {
+                type: "bar",
+
+                data: {
+                    labels: sorted.map(x => x[0]),
+
+                    datasets: [{
+                        label: "High / Critical Projects",
+                        data: sorted.map(x => x[1])
+                    }]
+                },
+
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            }
+        );
+
+}
+
+
+/* Category */
+
+function renderCategory(projects) {
+
+    const categoryMap = {};
+
+    projects.forEach(project => {
+
+        const category =
+            project.project_category ||
+            project.category ||
+            "Unknown";
+
+        categoryMap[category] =
+            (categoryMap[category] || 0) + 1;
+
+    });
+
+    const sorted =
+        Object.entries(categoryMap)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 10);
+
+    destroyChart("category");
+
+    charts.category =
+        new Chart(
+            document.getElementById("categoryChart"),
+            {
+                type: "bar",
+
+                data: {
+                    labels: sorted.map(x => x[0]),
+
+                    datasets: [{
+                        label: "Projects",
+                        data: sorted.map(x => x[1])
+                    }]
+                },
+
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            }
+        );
+
+}
+
+
+/* Financial */
+
+function renderFinancial(projects) {
+
+    let sanctioned = 0;
+    let expenditure = 0;
+
+    projects.forEach(project => {
+
+        sanctioned += number(project.sanctioned_amount);
+
+        expenditure += number(project.expenditure);
+
+    });
+
+    destroyChart("financial");
+
+    charts.financial =
+        new Chart(
+            document.getElementById("financialChart"),
+            {
+                type: "bar",
+
+                data: {
+                    labels: ["Financial Position"],
+
+                    datasets: [
+                        {
+                            label: "Sanctioned",
+                            data: [sanctioned]
+                        },
+                        {
+                            label: "Expenditure",
+                            data: [expenditure]
+                        }
+                    ]
+                },
+
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+
+                            ticks: {
+                                callback: function(value) {
+                                    return money(value);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        );
+
+}
+
+
+/* Status */
+
+function renderStatus(projects) {
+
+    const statusMap = {};
+
+    projects.forEach(project => {
+
+        let status =
+            project.project_status ||
+            project.status ||
+            "Unknown";
+
+        status = String(status);
+
+        statusMap[status] =
+            (statusMap[status] || 0) + 1;
+
+    });
+
+    const entries =
+        Object.entries(statusMap)
+            .sort((a, b) => b[1] - a[1]);
+
+    destroyChart("status");
+
+    charts.status =
+        new Chart(
+            document.getElementById("statusChart"),
+            {
+                type: "doughnut",
+
+                data: {
+                    labels: entries.map(x => x[0]),
+
+                    datasets: [{
+                        data: entries.map(x => x[1])
+                    }]
+                },
+
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+
+                    plugins: {
+                        legend: {
+                            position: "bottom"
+                        }
+                    }
+                }
+            }
+        );
+
+}
+
+
+/* Indicators */
+
+function renderIndicators(projects) {
+
+    const indicators = {
+        "Financial": 0,
+        "Delay": 0,
+        "Duplicate": 0,
+        "Contractor": 0,
+        "Geographic": 0,
+        "Data Quality": 0
+    };
+
+    projects.forEach(project => {
+
+        if (number(project.financial_indicator) > 0)
+            indicators["Financial"]++;
+
+        if (number(project.delay_indicator) > 0)
+            indicators["Delay"]++;
+
+        if (number(project.duplicate_indicator) > 0)
+            indicators["Duplicate"]++;
+
+        if (number(project.contractor_indicator) > 0)
+            indicators["Contractor"]++;
+
+        if (number(project.geographic_indicator) > 0)
+            indicators["Geographic"]++;
+
+        if (number(project.data_quality_indicator) > 0)
+            indicators["Data Quality"]++;
+
+    });
+
+    destroyChart("indicators");
+
+    charts.indicators =
+        new Chart(
+            document.getElementById("indicatorChart"),
+            {
+                type: "bar",
+
+                data: {
+                    labels: Object.keys(indicators),
+
+                    datasets: [{
+                        label: "Projects Flagged",
+                        data: Object.values(indicators)
+                    }]
+                },
+
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            }
+        );
+
+}
+
+
+/* Average State Risk */
+
+function renderStateAverageRisk(projects) {
+
+    const stateData = {};
+
+    projects.forEach(project => {
+
+        const state = project.state || "Unknown";
+
+        if (!stateData[state]) {
+            stateData[state] = {
+                total: 0,
+                count: 0
+            };
+        }
+
+        stateData[state].total +=
+            number(project.risk_score);
+
+        stateData[state].count++;
+
+    });
+
+    const entries =
+        Object.entries(stateData)
+            .map(([state, value]) => [
+                state,
+                value.count
+                    ? value.total / value.count
+                    : 0
+            ])
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 10);
+
+    destroyChart("stateAverageRisk");
+
+    charts.stateAverageRisk =
+        new Chart(
+            document.getElementById("stateAverageRiskChart"),
+            {
+                type: "bar",
+
+                data: {
+                    labels: entries.map(x => x[0]),
+
+                    datasets: [{
+                        label: "Average Risk Score",
+                        data: entries.map(x => Number(x[1].toFixed(2)))
+                    }]
+                },
+
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100
+                        }
+                    }
+                }
+            }
+        );
+
+}
+
+
+/* =========================
+   INDIA MAP
+========================= */
+
+function setupMap(projects) {
+
+    if (indiaMap) {
+        indiaMap.remove();
+    }
+
+    indiaMap =
+        L.map("indiaMap", {
+            zoomControl: true
+        }).setView(
+            [22.5, 79.0],
+            5
+        );
+
+
+    L.tileLayer(
+        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        {
+            maxZoom: 18,
+            attribution: "&copy; OpenStreetMap contributors"
+        }
+    ).addTo(indiaMap);
+
+
+    populateStateFilter(projects);
+
+    renderMapMarkers(projects);
+
+}
+
+
+/* Populate state dropdown */
+
+function populateStateFilter(projects) {
+
+    const select =
+        document.getElementById("mapStateFilter");
+
+    const states =
+        [...new Set(
+            projects
+                .map(project => project.state)
+                .filter(Boolean)
+        )]
+        .sort();
+
+    select.innerHTML =
+        `<option value="ALL">All States</option>`;
+
+    states.forEach(state => {
+
+        const option =
+            document.createElement("option");
+
+        option.value = state;
+
+        option.textContent = state;
+
+        select.appendChild(option);
+
+    });
+
+}
+
+
+/* Marker colour */
+
+function markerColor(level) {
+
+    switch (level) {
+
+        case "CRITICAL":
+            return "#dc2626";
+
+        case "HIGH":
+            return "#f97316";
+
+        case "MEDIUM":
+            return "#eab308";
+
+        default:
+            return "#22c55e";
+
+    }
+
+}
+
+
+/* Create markers */
+
+function renderMapMarkers(projects) {
+
+    mapMarkers.forEach(marker => {
+
+        indiaMap.removeLayer(marker);
+
+    });
+
+    mapMarkers = [];
+
+
+    const riskFilter =
+        document.getElementById("mapRiskFilter").value;
+
+    const stateFilter =
+        document.getElementById("mapStateFilter").value;
+
+
+    const bounds = [];
+
+
+    projects.forEach(project => {
+
+        const lat = number(project.latitude);
+        const lng = number(project.longitude);
+
+        if (
+            !lat ||
+            !lng ||
+            lat < 6 ||
+            lat > 38 ||
+            lng < 68 ||
+            lng > 98
+        ) {
+            return;
+        }
+
+
+        const level = riskLevel(project);
+
+
+        if (
+            riskFilter !== "ALL" &&
+            level !== riskFilter
+        ) {
+            return;
+        }
+
+
+        if (
+            stateFilter !== "ALL" &&
+            project.state !== stateFilter
+        ) {
+            return;
+        }
+
+
+        const marker =
+            L.circleMarker(
+                [lat, lng],
+                {
+                    radius:
+                        level === "CRITICAL" ? 10 :
+                        level === "HIGH" ? 8 :
+                        level === "MEDIUM" ? 7 :
+                        6,
+
+                    fillColor: markerColor(level),
+
+                    color: "#ffffff",
+
+                    weight: 2,
+
+                    opacity: 1,
+
+                    fillOpacity: 0.82
+                }
+            );
+
+
+        const projectId =
+            project.project_id || "N/A";
+
+
+        const name =
+            project.project_name || "Unnamed Project";
+
+
+        const riskScore =
+            number(project.risk_score).toFixed(1);
+
+
+        const popup = `
+
+            <div style="
+                min-width:240px;
+                font-family:Arial,sans-serif;
+            ">
+
+                <div style="
+                    font-size:15px;
+                    font-weight:800;
+                    margin-bottom:8px;
+                    color:#173b72;
+                ">
+                    ${escapeHtml(name)}
+                </div>
+
+                <div style="font-size:12px;line-height:1.7;">
+
+                    <strong>Project ID:</strong>
+                    ${escapeHtml(projectId)}
+                    <br>
+
+                    <strong>State:</strong>
+                    ${escapeHtml(project.state || "N/A")}
+                    <br>
+
+                    <strong>District:</strong>
+                    ${escapeHtml(project.district || "N/A")}
+                    <br>
+
+                    <strong>Risk:</strong>
+                    ${escapeHtml(level)}
+                    <br>
+
+                    <strong>Risk Score:</strong>
+                    ${riskScore}/100
+                    <br>
+
+                    <strong>Expenditure:</strong>
+                    ${money(project.expenditure)}
+
+                </div>
+
+                <div style="margin-top:10px;">
+
+                    <a
+                        href="/projects/${encodeURIComponent(projectId)}"
+                        style="
+                            display:inline-block;
+                            padding:6px 10px;
+                            border-radius:5px;
+                            background:#173b72;
+                            color:white;
+                            text-decoration:none;
+                            font-size:11px;
+                            font-weight:700;
+                        "
+                    >
+                        View Project Intelligence
+                    </a>
+
+                </div>
+
+            </div>
+
+        `;
+
+
+        marker.bindPopup(popup);
+
+        marker.addTo(indiaMap);
+
+        mapMarkers.push(marker);
+
+        bounds.push([lat, lng]);
+
+    });
+
+
+    if (bounds.length > 0) {
+
+        try {
+
+            indiaMap.fitBounds(bounds, {
+                padding: [25, 25],
+                maxZoom: 7
+            });
+
+        } catch (error) {
+
+            console.warn("Map bounds error:", error);
+
+        }
+
+    }
+
+}
+
+
+/* Apply filters */
+
+function applyMapFilters() {
+
+    renderMapMarkers(allProjects);
+
+}
+
+
+/* HTML escape */
+
+function escapeHtml(value) {
+
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
+
+
+/* =========================
+   ATTENTION TABLE
+========================= */
+
+function renderAttentionTable(projects) {
+
+    const container =
+        document.getElementById(
+            "attentionTableContainer"
+        );
+
+
+    if (!projects.length) {
+
+        container.innerHTML =
+            `<div class="empty-state">
+                No project records available.
+            </div>`;
+
+        return;
+
+    }
+
+
+    const sorted =
+        [...projects]
+            .sort(
+                (a, b) =>
+                    number(b.risk_score) -
+                    number(a.risk_score)
+            )
+            .slice(0, 10);
+
+
+    let html = `
+
+        <div style="overflow-x:auto;">
+
+        <table class="attention-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>Project ID</th>
+                    <th>Project</th>
+                    <th>State</th>
+                    <th>District</th>
+                    <th>Risk Score</th>
+                    <th>Risk Level</th>
+                    <th>Action</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+    `;
+
+
+    sorted.forEach(project => {
+
+        const level =
+            riskLevel(project);
+
+        const levelClass =
+            level.toLowerCase();
+
+
+        html += `
+
+            <tr>
+
+                <td>
+                    <strong>
+                        ${escapeHtml(project.project_id || "N/A")}
+                    </strong>
+                </td>
+
+                <td>
+                    ${escapeHtml(project.project_name || "Unnamed")}
+                </td>
+
+                <td>
+                    ${escapeHtml(project.state || "N/A")}
+                </td>
+
+                <td>
+                    ${escapeHtml(project.district || "N/A")}
+                </td>
+
+                <td>
+                    <strong>
+                        ${number(project.risk_score).toFixed(1)}
+                    </strong>
+                </td>
+
+                <td>
+
+                    <span class="risk-badge ${levelClass}">
+                        ${level}
+                    </span>
+
+                </td>
+
+                <td>
+
+                    <a
+                        class="view-btn"
+                        href="/projects/${encodeURIComponent(project.project_id)}"
+                    >
+                        View Details
+                    </a>
+
+                </td>
+
+            </tr>
+
+        `;
+
+    });
+
+
+    html += `
+
+            </tbody>
+
+        </table>
+
+        </div>
+
+    `;
+
+
+    container.innerHTML = html;
+
+}
+
+
+/* =========================
+   RUN AI
+========================= */
+
+async function runAIAnalysis() {
+
+    const button =
+        document.getElementById("runAIButton");
+
+    const status =
+        document.getElementById("aiStatus");
+
+    button.disabled = true;
+
+    button.textContent =
+        "⏳ Running AI Analysis...";
+
+    status.textContent =
+        "Analysing financial, delay, duplicate, contractor and geographic indicators...";
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/anomalies/run",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    }
+                }
+            );
+
+
+        const result =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                result.error ||
+                "AI analysis failed."
+            );
+
+        }
+
+
+        status.textContent =
+            "✓ AI analysis completed successfully. Refreshing indicators...";
+
+        document.getElementById("systemStatus").textContent =
+            "Analysis Complete";
+
+
+        await loadDashboard();
+
+        await loadProjects();
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        status.textContent =
+            "AI analysis failed: " +
+            error.message;
+
+        document.getElementById("systemStatus").textContent =
+            "Analysis Error";
+
+    } finally {
+
+        button.disabled = false;
+
+        button.textContent =
+            "⚡ Run AI Analysis";
+
+    }
+
+}
+
+
+/* =========================
+   INITIAL LOAD
+========================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    async function() {
+
+        await loadDashboard();
+
+        await loadProjects();
+
+    }
+);
+
+</script>
+
+{% endblock %}

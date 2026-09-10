@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <meta name="theme-color" content="#0b2e59">
+
+    <title>
+        {% block title %}
+        MPLAD AI Intelligence
+        {% endblock %}
+    </title>
+
+    <style>
+
+        /* =========================================================
+           GLOBAL
+        ========================================================= */
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100%;
+        }
+
+        body {
+
+            font-family:
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                Roboto,
+                Arial,
+                sans-serif;
+
+            background:
+                linear-gradient(
+                    180deg,
+                    #f4f7fb 0%,
+                    #eef3f8 100%
+                );
+
+            color: #172033;
+
+            -webkit-font-smoothing: antialiased;
+        }
+
+
+        /* =========================================================
+           TOP GOVERNMENT STRIP
+        ========================================================= */
+
+        .gov-strip {
+
+            min-height: 34px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 0 32px;
+
+            background: #071d38;
+
+            color: #d9e4f2;
+
+            font-size: 11px;
+            font-weight: 600;
+
+            letter-spacing: 0.15px;
+
+            border-bottom: 1px solid
+                rgba(255,255,255,0.08);
+        }
+
+        .gov-left,
+        .gov-right {
+
+            display: flex;
+            align-items: center;
+            gap: 9px;
+        }
+
+        .gov-emblem {
+
+            font-size: 15px;
+            line-height: 1;
+        }
+
+        .gov-divider {
+
+            width: 1px;
+            height: 13px;
+
+            background: rgba(255,255,255,0.25);
+        }
+
+        .secure-status {
+
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+
+            color: #b7e4c7;
+        }
+
+        .secure-dot {
+
+            width: 7px;
+            height: 7px;
+
+            border-radius: 50%;
+
+            background: #35c759;
+
+            box-shadow:
+                0 0 0 3px
+                rgba(53,199,89,0.12);
+        }
+
+
+        /* =========================================================
+           NAVBAR
+        ========================================================= */
+
+        .navbar {
+
+            width: 100%;
+            min-height: 72px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #0b2e59,
+                    #123f73
+                );
+
+            color: white;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 0 32px;
+
+            position: sticky;
+            top: 0;
+
+            z-index: 1000;
+
+            box-shadow:
+                0 3px 18px
+                rgba(7,29,56,0.18);
+        }
+
+
+        /* =========================================================
+           BRAND
+        ========================================================= */
+
+        .brand {
+
+            display: flex;
+            align-items: center;
+
+            gap: 12px;
+
+            text-decoration: none;
+            color: white;
+        }
+
+
+        .brand-icon {
+
+            width: 43px;
+            height: 43px;
+
+            border-radius: 10px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #f59e0b,
+                    #f97316
+                );
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 21px;
+
+            box-shadow:
+                0 5px 15px
+                rgba(0,0,0,0.16);
+
+            flex-shrink: 0;
+        }
+
+
+        .brand-text {
+
+            display: flex;
+            flex-direction: column;
+        }
+
+
+        .brand-title {
+
+            font-size: 17px;
+
+            font-weight: 800;
+
+            line-height: 20px;
+
+            letter-spacing: -0.2px;
+        }
+
+
+        .brand-subtitle {
+
+            font-size: 10.5px;
+
+            color: #b9cbe0;
+
+            margin-top: 3px;
+
+            font-weight: 500;
+        }
+
+
+        /* =========================================================
+           NAV LINKS
+        ========================================================= */
+
+        .nav-links {
+
+            display: flex;
+            align-items: center;
+
+            gap: 4px;
+        }
+
+
+        .nav-links a {
+
+            position: relative;
+
+            color: #cbd8e7;
+
+            text-decoration: none;
+
+            font-size: 13px;
+
+            font-weight: 650;
+
+            padding: 10px 13px;
+
+            border-radius: 8px;
+
+            transition:
+                color 0.2s ease,
+                background 0.2s ease,
+                transform 0.2s ease;
+        }
+
+
+        .nav-links a:hover {
+
+            color: white;
+
+            background:
+                rgba(255,255,255,0.09);
+
+            transform: translateY(-1px);
+        }
+
+
+        .nav-links a.active {
+
+            color: white;
+
+            background:
+                rgba(255,255,255,0.13);
+
+            box-shadow:
+                inset 0 0 0 1px
+                rgba(255,255,255,0.08);
+        }
+
+
+        .nav-links a.active::after {
+
+            content: "";
+
+            position: absolute;
+
+            left: 13px;
+            right: 13px;
+
+            bottom: 4px;
+
+            height: 2px;
+
+            border-radius: 2px;
+
+            background: #f59e0b;
+        }
+
+
+        /* =========================================================
+           MAIN CONTENT
+        ========================================================= */
+
+        .main-container {
+
+            width: 100%;
+
+            max-width: 1520px;
+
+            margin: 0 auto;
+
+            padding: 30px 32px 20px;
+
+            min-height: calc(
+                100vh - 170px
+            );
+        }
+
+
+        /* =========================================================
+           GLOBAL CARD POLISH
+        ========================================================= */
+
+        .main-container > * {
+
+            animation:
+                pageFade 0.35s ease-out;
+        }
+
+
+        @keyframes pageFade {
+
+            from {
+
+                opacity: 0;
+
+                transform:
+                    translateY(5px);
+            }
+
+            to {
+
+                opacity: 1;
+
+                transform:
+                    translateY(0);
+            }
+        }
+
+
+        /* =========================================================
+           SCROLLBAR
+        ========================================================= */
+
+        ::-webkit-scrollbar {
+
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+
+            background: #edf1f6;
+        }
+
+        ::-webkit-scrollbar-thumb {
+
+            background: #aeb9c8;
+
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+
+            background: #8391a4;
+        }
+
+
+        /* =========================================================
+           FOOTER
+        ========================================================= */
+
+        .footer {
+
+            margin-top: 35px;
+
+            padding: 28px 32px 32px;
+
+            text-align: center;
+
+            border-top:
+                1px solid #dce3ec;
+
+            background:
+                rgba(255,255,255,0.55);
+
+            color: #697586;
+
+            font-size: 11.5px;
+
+            line-height: 20px;
+        }
+
+
+        .footer strong {
+
+            color: #334155;
+
+            font-size: 12px;
+        }
+
+
+        .footer-note {
+
+            max-width: 760px;
+
+            margin:
+                7px auto 0;
+
+            color: #7b8797;
+        }
+
+
+        .footer-badge {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 6px;
+
+            margin-top: 12px;
+
+            padding: 5px 10px;
+
+            border-radius: 20px;
+
+            background: #edf4fb;
+
+            color: #315b86;
+
+            font-size: 10px;
+
+            font-weight: 700;
+        }
+
+
+        /* =========================================================
+           RESPONSIVE NAVBAR
+        ========================================================= */
+
+        @media (max-width: 1050px) {
+
+            .navbar {
+
+                padding:
+                    10px 20px;
+
+                flex-direction: column;
+
+                align-items: stretch;
+
+                gap: 8px;
+            }
+
+
+            .brand {
+
+                align-self: flex-start;
+            }
+
+
+            .nav-links {
+
+                width: 100%;
+
+                overflow-x: auto;
+
+                padding:
+                    2px 0 4px;
+
+                scrollbar-width: thin;
+            }
+
+
+            .nav-links a {
+
+                white-space: nowrap;
+
+                flex-shrink: 0;
+            }
+        }
+
+
+        @media (max-width: 700px) {
+
+            .gov-strip {
+
+                padding: 0 15px;
+
+                font-size: 9px;
+            }
+
+
+            .gov-right {
+
+                display: none;
+            }
+
+
+            .navbar {
+
+                padding:
+                    10px 15px;
+            }
+
+
+            .brand-title {
+
+                font-size: 15px;
+            }
+
+
+            .brand-subtitle {
+
+                font-size: 9.5px;
+            }
+
+
+            .brand-icon {
+
+                width: 39px;
+                height: 39px;
+
+                font-size: 19px;
+            }
+
+
+            .main-container {
+
+                padding:
+                    20px 14px;
+            }
+
+
+            .footer {
+
+                padding:
+                    24px 15px 28px;
+            }
+        }
+
+
+        /* =========================================================
+           ACCESSIBILITY
+        ========================================================= */
+
+        a:focus-visible,
+        button:focus-visible,
+        select:focus-visible,
+        input:focus-visible {
+
+            outline:
+                3px solid
+                rgba(37,99,235,0.28);
+
+            outline-offset: 2px;
+        }
+
+
+        /* =========================================================
+           SELECTION
+        ========================================================= */
+
+        ::selection {
+
+            background: #cfe1f5;
+
+            color: #0b2e59;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     GOVERNMENT STRIP
+========================================================= -->
+
+<div class="gov-strip">
+
+    <div class="gov-left">
+
+        <span class="gov-emblem">🇮🇳</span>
+
+        <span>
+            Government of India • Public Infrastructure Monitoring
+        </span>
+
+    </div>
+
+
+    <div class="gov-right">
+
+        <span>
+            MPLAD Scheme Intelligence Platform
+        </span>
+
+        <span class="gov-divider"></span>
+
+        <span class="secure-status">
+
+            <span class="secure-dot"></span>
+
+            System Online
+
+        </span>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     NAVIGATION
+========================================================= -->
+
+<nav class="navbar">
+
+
+    <a href="/" class="brand">
+
+        <div class="brand-icon">
+            🏛️
+        </div>
+
+
+        <div class="brand-text">
+
+            <div class="brand-title">
+                MPLAD AI Intelligence
+            </div>
+
+
+            <div class="brand-subtitle">
+                Smart Monitoring & Risk Detection System
+            </div>
+
+        </div>
+
+    </a>
+
+
+    <div class="nav-links">
+
+
+        <a
+            href="/"
+            id="nav-dashboard"
+        >
+            Dashboard
+        </a>
+
+
+        <a
+            href="/projects"
+            id="nav-projects"
+        >
+            Projects
+        </a>
+
+
+        <a
+            href="/anomalies"
+            id="nav-anomalies"
+        >
+            Anomalies
+        </a>
+
+
+        <a
+            href="/upload"
+            id="nav-upload"
+        >
+            Upload Data
+        </a>
+
+
+        <a
+            href="/reports"
+            id="nav-reports"
+        >
+            Reports
+        </a>
+
+
+    </div>
+
+</nav>
+
+
+<!-- =========================================================
+     PAGE CONTENT
+========================================================= -->
+
+<main class="main-container">
+
+    {% block content %}
+
+    {% endblock %}
+
+</main>
+
+
+<!-- =========================================================
+     FOOTER
+========================================================= -->
+
+<footer class="footer">
+
+
+    <strong>
+        MPLAD AI Intelligence System
+    </strong>
+
+
+    <div class="footer-note">
+
+        AI-assisted monitoring for anomalies,
+        financial risks, delays and implementation
+        inefficiencies.
+
+        <br>
+
+        AI indicators are decision-support signals
+        and do not independently establish fraud
+        or wrongdoing.
+
+    </div>
+
+
+    <div class="footer-badge">
+
+        🛡️
+
+        Human-in-the-loop decision support
+
+    </div>
+
+
+</footer>
+
+
+<!-- =========================================================
+     NAVIGATION ACTIVE STATE
+========================================================= -->
+
+<script>
+
+    const currentPath =
+        window.location.pathname;
+
+
+    function activateNav(id) {
+
+        const element =
+            document.getElementById(id);
+
+        if (element) {
+
+            element.classList.add("active");
+
+        }
+
+    }
+
+
+    if (
+        currentPath === "/" ||
+        currentPath === ""
+    ) {
+
+        activateNav("nav-dashboard");
+
+    }
+
+    else if (
+        currentPath.startsWith("/projects")
+    ) {
+
+        activateNav("nav-projects");
+
+    }
+
+    else if (
+        currentPath.startsWith("/anomalies")
+    ) {
+
+        activateNav("nav-anomalies");
+
+    }
+
+    else if (
+        currentPath.startsWith("/upload")
+    ) {
+
+        activateNav("nav-upload");
+
+    }
+
+    else if (
+        currentPath.startsWith("/reports")
+    ) {
+
+        activateNav("nav-reports");
+
+    }
+
+</script>
+
+
+{% block scripts %}
+
+{% endblock %}
+
+
+</body>
+
+</html>
